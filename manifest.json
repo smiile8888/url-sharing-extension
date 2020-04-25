@@ -1,0 +1,17 @@
+{
+    "name": "URL-Sharing",
+    "version": "0.0.1",
+    "description": "Sharing URL Everywhere",
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
+        "persistent": false
+    },
+    "browser_action": {},
+    "permissions": [
+        "tabs",
+        "contextMenus"
+    ],
+    "manifest_version": 2
+}
