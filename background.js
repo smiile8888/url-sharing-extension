@@ -5,10 +5,6 @@ var contextMenuItem = {
     "contexts": ["selection"]
 };
 
-chrome.browserAction.onClicked.addListener(getURL);
-chrome.contextMenus.create(contextMenuItem);
-chrome.contextMenus.onClicked.addListener(parseContent);
-
 /**
  * Get the URL of current page
  * @param {tab} tab 
@@ -23,10 +19,14 @@ function getURL(tab) {
  * @param {tab} tab 
  */
 function parseContent(tab) {
-    var selection = {};
+    let selection = {};
     selection.url = tab.linkUrl ? tab.linkUrl : tab.pageUrl;
     selection.text = tab.selectionText ? tab.selectionText : '';
     console.log(selection);
 
     return selection;
 }
+
+chrome.browserAction.onClicked.addListener(getURL);
+chrome.contextMenus.create(contextMenuItem);
+chrome.contextMenus.onClicked.addListener(parseContent);
