@@ -2,11 +2,10 @@
     "name": "URL-Sharing",
     "version": "0.0.1",
     "description": "Sharing URL Everywhere",
+    "content_security_policy": "script-src 'self' https://connect.facebook.net; object-src 'self'",
     "background": {
-        "scripts": [
-            "background.js"
-        ],
-        "persistent": false
+        "page": "background.html",
+        "persistent": true
     },
     "browser_action": {},
     "permissions": [
