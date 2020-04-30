@@ -8,6 +8,16 @@ function addNewItem() {
   // Clear the input box
   document.getElementById("myInput").value = "";
 
+  let tempFolder = { title: inputValue, subfolder: [], url: [] };
+  folders.folder.push(tempFolder);
+
+  console.log("Current obj");
+  console.log(folders);
+
+  renderFolders(folders);
+
+  return;
+
   let li = document.createElement("li");
   let domString = `<div class=""><i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i><img src="../assets/folder-icon.png" style="width: 50px;" /><span>${inputValue}</span></div>`;
   li.innerHTML = domString;
@@ -58,7 +68,7 @@ function checkEnter(e) {
   }
 }
 
-const folders = {
+let folders = {
   folder: [
     {
       title: "folder1",
@@ -87,7 +97,7 @@ const folders = {
         {
           title: "folder2-2",
           subfolder: [],
-          url: ["dill.com", "dill.com"],
+          url: [],
         },
       ],
       url: ["dill.com", "dill.com"],
@@ -107,10 +117,12 @@ function renderFolders(folders) {
   let folderList = folders.folder;
   const html = folderList
     .map((item) => {
-      return `<div class="dropdown"><i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>
-              <img src="../assets/folder-icon.png" style="width: 50px;" /><span>${
-                item.title
-              }</span>
+      return `<div class="dropdown">${
+        item.subfolder.length == 0 && item.url.length == 0
+          ? ""
+          : `<i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>`
+      }<img src="../assets/folder-icon.png" style="width: 20px;" /><span>
+              ${item.title}</span>
               <ul id="myDropdown" class="dropdown-content">
               ${
                 item.url.length == 0
@@ -127,7 +139,11 @@ function renderFolders(folders) {
                   ? ""
                   : item.subfolder
                       .map((item) => {
-                        return `<div class="sub-folder dropdown"><i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>
+                        return `<div class="sub-folder dropdown">${
+                          item.subfolder.length == 0 && item.url.length == 0
+                            ? ""
+                            : `<i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>`
+                        }
                           <img src="../assets/folder-icon.png" style="width: 20px;" /><span>${
                             item.title
                           }</span>
