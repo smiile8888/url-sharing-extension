@@ -9,7 +9,7 @@ function addNewItem() {
   document.getElementById("myInput").value = "";
 
   let li = document.createElement("li");
-  let domString = `<div class=""><img src="../assets/folder-icon.png" style="width: 50px;" /><span>${inputValue}</span></div>`;
+  let domString = `<div class=""><i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i><img src="../assets/folder-icon.png" style="width: 50px;" /><span>${inputValue}</span></div>`;
   li.innerHTML = domString;
   // Create folder with the name
 
@@ -17,11 +17,11 @@ function addNewItem() {
   // li.appendChild(txtNode);
 
   /* To add a checked symbol when click on a list item */
-  li.addEventListener("click", function (ev) {
-    if (ev.target.tagName === "LI") {
-      ev.target.classList.toggle("checked");
-    }
-  });
+  // li.addEventListener("click", function (ev) {
+  //   if (ev.target.tagName === "LI") {
+  //     ev.target.classList.toggle("checked");
+  //   }
+  // });
 
   /* Create a "close" button and append it to each of list item */
   let span = document.createElement("span");
@@ -38,6 +38,10 @@ function addNewItem() {
   li.appendChild(span);
 
   document.getElementById("myUL").appendChild(li);
+}
+
+function expandSubFolder(x) {
+  x.classList.toggle("fa-thumbs-down");
 }
 
 let myInput = document.getElementById("myInput");
