@@ -8,7 +8,7 @@ function addNewItem() {
   // Clear the input box
   document.getElementById("myInput").value = "";
 
-  let tempFolder = { title: inputValue, subfolder: [], url: [] };
+  let tempFolder = { title: inputValue, folder: [], url: [] };
   folders.folder.push(tempFolder);
 
   console.log("Current obj");
@@ -68,35 +68,41 @@ function checkEnter(e) {
   }
 }
 
+function getCurrentItem(x) {
+  console.log("Current Item");
+  console.log(x.parentNode.parentNode);
+  console.log(x.parentNode.parentNode.getAttribute("data-id"));
+}
+
 let folders = {
   folder: [
     {
       title: "folder1",
-      subfolder: [
+      folder: [
         {
           title: "folder1-1",
-          subfolder: [],
+          folder: [],
           url: ["dill.com", "dill.com"],
         },
         {
           title: "folder1-2",
-          subfolder: [],
+          folder: [],
           url: ["dill.com", "dill.com"],
         },
       ],
-      url: ["dill.com", "dill.com"],
+      url: ["dill1111.com", "dill2222.com"],
     },
     {
       title: "folder2",
-      subfolder: [
+      folder: [
         {
           title: "folder2-1",
-          subfolder: [],
+          folder: [],
           url: ["dill.com", "dill.com"],
         },
         {
           title: "folder2-2",
-          subfolder: [],
+          folder: [],
           url: [],
         },
       ],
@@ -113,63 +119,62 @@ let folders = {
 //   console.log(json); // this will show the info it in firebug console
 // });
 
+function getFolders(item, idx, subfolder) {
+  console.log(item, idx);
+  return `<div data-id=${idx} class="${
+    subfolder ? "sub-folder " : ""
+  } dropdown menu-list">
+            <div class="menu-list-content">
+              <a onclick="getCurrentItem(this)" href="#">Edit</a>
+              <a onclick="getCurrentItem(this)" href="#">Share</a>
+              <a onclick="getCurrentItem(this)" href="#">+</a>
+            </div>
+            ${item.folder.length == 0 && item.url.length == 0 ? "" : getIcon()}
+            ${getFolderImage()}
+            <span>${item.title}</span>
+            <ul id="myDropdown" class="dropdown-content">
+            ${item.url.length == 0 ? "" : getURLs(item.url)}
+            </ul>
+            </div>
+            ${
+              item.folder.length == 0
+                ? ""
+                : item.folder
+                    .map((item, idx) => {
+                      console.log(idx);
+                      return `${getFolders(item, idx, true)}`;
+                    })
+                    .join("")
+            }
+          `;
+}
+
+function getIcon() {
+  return `<i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>`;
+}
+
+function getFolderImage() {
+  return `<img src="../assets/folder-icon.png" style="width: 20px;" />`;
+}
+
+function getURLs(urls) {
+  const html = urls
+    .map((item, idx) => {
+      return `
+        <li style="padding: 0px;margin-left: 50px;">${item}</li>
+      `;
+    })
+    .join("");
+
+  return html;
+}
+
 function renderFolders(folders) {
   let folderList = folders.folder;
   const html = folderList
     .map((item, idx) => {
       console.log(idx);
-      return `<div data-id=${idx} class="dropdown menu-list">
-                <div class="menu-list-content">
-                  <a href="#">Edit</a>
-                  <a href="#">Share</a>
-                  <a href="#">+</a>
-                </div>
-      ${
-        item.subfolder.length == 0 && item.url.length == 0
-          ? ""
-          : `<i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>`
-      }<img src="../assets/folder-icon.png" style="width: 20px;" /><span>
-              ${item.title}</span>
-              <ul id="myDropdown" class="dropdown-content">
-              ${
-                item.url.length == 0
-                  ? ""
-                  : item.url
-                      .map((item) => {
-                        return `<li style="padding: 0px;margin-left: 50px;">${item}</li>`;
-                      })
-                      .join("")
-              }
-              </ul>
-              ${
-                item.subfolder.length == 0
-                  ? ""
-                  : item.subfolder
-                      .map((item, idx) => {
-                        return `<div data-id=${idx} class="sub-folder dropdown menu-list">${
-                          item.subfolder.length == 0 && item.url.length == 0
-                            ? ""
-                            : `<i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>`
-                        }
-                          <img src="../assets/folder-icon.png" style="width: 20px;" /><span>${
-                            item.title
-                          }</span>
-                          <ul id="myDropdown" class="dropdown-content">
-                            ${
-                              item.url.length == 0
-                                ? ""
-                                : item.url
-                                    .map((item) => {
-                                      return `<li style="padding: 0px;margin-left: 50px;">${item}</li>`;
-                                    })
-                                    .join("")
-                            }
-                            </ul>
-                        </div>`;
-                      })
-                      .join("")
-              }
-            </div>`;
+      return `${getFolders(item, idx, false)}`;
     })
     .join("");
 
