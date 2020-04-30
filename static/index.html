@@ -7,23 +7,31 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
     <link rel="stylesheet" href="../css/app.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   </head>
   <body>
     <ul id="myUL"></ul>
 
-    <div class="">
-      <div class="">
+    <div class="folder-list" , id="folder-list">
+      <div class="dropdown">
+        <i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>
         <img src="../assets/folder-icon.png" style="width: 50px;" /><span
           >Test</span
         >
+        <ul id="myDropdown" class="dropdown-content">
+          <li>hhhhh</li>
+          <li>hhhhh</li>
+          <li>hhhhh</li>
+        </ul>
       </div>
-      <input
-        class=""
-        id="myInput"
-        placeholder="Enter folder title..."
-        type="text"
-      />
     </div>
+
+    <input
+      class=""
+      id="myInput"
+      placeholder="Enter folder title..."
+      type="text"
+    />
 
     <script src="../js/app.js"></script>
   </body>

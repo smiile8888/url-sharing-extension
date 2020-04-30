@@ -41,7 +41,10 @@ function addNewItem() {
 }
 
 function expandSubFolder(x) {
+  console.log(x.parentNode.getElementsByTagName("ul"));
   x.classList.toggle("fa-thumbs-down");
+  x.parentNode.getElementsByTagName("ul")[0].classList.toggle("show");
+  // document.getElementById("myDropdown").classList.toggle("show");
 }
 
 let myInput = document.getElementById("myInput");
@@ -54,3 +57,102 @@ function checkEnter(e) {
     addNewItem();
   }
 }
+
+const folders = {
+  folder: [
+    {
+      title: "folder1",
+      subfolder: [
+        {
+          title: "folder1-1",
+          subfolder: [],
+          url: ["dill.com", "dill.com"],
+        },
+        {
+          title: "folder1-2",
+          subfolder: [],
+          url: ["dill.com", "dill.com"],
+        },
+      ],
+      url: ["dill.com", "dill.com"],
+    },
+    {
+      title: "folder2",
+      subfolder: [
+        {
+          title: "folder2-1",
+          subfolder: [],
+          url: ["dill.com", "dill.com"],
+        },
+        {
+          title: "folder2-2",
+          subfolder: [],
+          url: ["dill.com", "dill.com"],
+        },
+      ],
+      url: ["dill.com", "dill.com"],
+    },
+  ],
+};
+
+// fetch("./test.json")
+//   .then((resp) => resp.json())
+//   .then((data) => folders.push(...data));
+
+// $.getJSON("../test.json", function (json) {
+//   console.log(json); // this will show the info it in firebug console
+// });
+
+function renderFolders(folders) {
+  let folderList = folders.folder;
+  const html = folderList
+    .map((item) => {
+      return `<div class="dropdown"><i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>
+              <img src="../assets/folder-icon.png" style="width: 50px;" /><span>${
+                item.title
+              }</span>
+              <ul id="myDropdown" class="dropdown-content">
+              ${
+                item.url.length == 0
+                  ? ""
+                  : item.url
+                      .map((item) => {
+                        return `<li style="padding: 0px;margin-left: 50px;">${item}</li>`;
+                      })
+                      .join("")
+              }
+              </ul>
+              ${
+                item.subfolder.length == 0
+                  ? ""
+                  : item.subfolder
+                      .map((item) => {
+                        return `<div class="sub-folder dropdown"><i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>
+                          <img src="../assets/folder-icon.png" style="width: 20px;" /><span>${
+                            item.title
+                          }</span>
+                          <ul id="myDropdown" class="dropdown-content">
+                            ${
+                              item.url.length == 0
+                                ? ""
+                                : item.url
+                                    .map((item) => {
+                                      return `<li style="padding: 0px;margin-left: 50px;">${item}</li>`;
+                                    })
+                                    .join("")
+                            }
+                            </ul>
+                        </div>`;
+                      })
+                      .join("")
+              }
+            </div>`;
+    })
+    .join("");
+
+  folderPannel.innerHTML = html;
+}
+
+let folderPannel = document.getElementById("folder-list");
+
+renderFolders(folders);
