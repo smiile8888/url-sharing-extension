@@ -116,8 +116,15 @@ let folders = {
 function renderFolders(folders) {
   let folderList = folders.folder;
   const html = folderList
-    .map((item) => {
-      return `<div class="dropdown">${
+    .map((item, idx) => {
+      console.log(idx);
+      return `<div data-id=${idx} class="dropdown menu-list">
+                <div class="menu-list-content">
+                  <a href="#">Edit</a>
+                  <a href="#">Share</a>
+                  <a href="#">+</a>
+                </div>
+      ${
         item.subfolder.length == 0 && item.url.length == 0
           ? ""
           : `<i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>`
@@ -138,8 +145,8 @@ function renderFolders(folders) {
                 item.subfolder.length == 0
                   ? ""
                   : item.subfolder
-                      .map((item) => {
-                        return `<div class="sub-folder dropdown">${
+                      .map((item, idx) => {
+                        return `<div data-id=${idx} class="sub-folder dropdown menu-list">${
                           item.subfolder.length == 0 && item.url.length == 0
                             ? ""
                             : `<i onclick="expandSubFolder(this)" class="fa fa-thumbs-up"></i>`
