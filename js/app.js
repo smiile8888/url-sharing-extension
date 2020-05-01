@@ -9,7 +9,7 @@ function addNewItem() {
   document.getElementById("myInput").value = "";
 
   let tempFolder = { title: inputValue, folder: [], url: [] };
-  folders.folder.push(tempFolder);
+  folders.folder[0].folder.push(tempFolder);
 
   console.log("Current obj");
   console.log(folders);
@@ -68,10 +68,24 @@ function checkEnter(e) {
   }
 }
 
+function addFolder(x) {
+  let ele = getCurrentItem(x);
+  let level = ele.split("-");
+  console.log(ele, typeof ele, ele[0], level);
+  // Get index to insert sub-folder
+
+  let tempFolder = { title: "untitled", folder: [], url: [] };
+  folders.folder[0].push(tempFolder);
+
+  console.log("Current obj");
+  console.log(folders);
+}
+
 function getCurrentItem(x) {
   console.log("Current Item");
   console.log(x.parentNode.parentNode);
   console.log(x.parentNode.parentNode.getAttribute("data-id"));
+  return x.parentNode.parentNode.getAttribute("data-id");
 }
 
 let folders = {
@@ -119,15 +133,15 @@ let folders = {
 //   console.log(json); // this will show the info it in firebug console
 // });
 
-function getFolders(item, idx, subfolder) {
-  console.log(item, idx);
-  return `<div data-id=${idx} class="${
+function getFolders(item, idx, subfolder, level) {
+  console.log(item, idx, level);
+  return `<div data-id=${level}-${idx} class="${
     subfolder ? "sub-folder " : ""
   } dropdown menu-list">
             <div class="menu-list-content">
               <a onclick="getCurrentItem(this)" href="#">Edit</a>
               <a onclick="getCurrentItem(this)" href="#">Share</a>
-              <a onclick="getCurrentItem(this)" href="#">+</a>
+              <a onclick="addFolder(this)" href="#">+</a>
             </div>
             ${item.folder.length == 0 && item.url.length == 0 ? "" : getIcon()}
             ${getFolderImage()}
@@ -142,7 +156,7 @@ function getFolders(item, idx, subfolder) {
                 : item.folder
                     .map((item, idx) => {
                       console.log(idx);
-                      return `${getFolders(item, idx, true)}`;
+                      return `${getFolders(item, idx, true, level + 1)}`;
                     })
                     .join("")
             }
@@ -174,7 +188,7 @@ function renderFolders(folders) {
   const html = folderList
     .map((item, idx) => {
       console.log(idx);
-      return `${getFolders(item, idx, false)}`;
+      return `${getFolders(item, idx, false, 0)}`;
     })
     .join("");
 
