@@ -1,7 +1,8 @@
 class Folder {
-  constructor(name, id) {
+  constructor(name, id, rootId) {
     this.name = name;
     this.id = id;
+    this.root = rootId;
     this.data = [];
     this.subfolder = [];
     this.accessible = [];
@@ -32,26 +33,38 @@ class Folder {
   }
 }
 
+function generateUniqueID() {
+  return uuidv1();
+}
+
 class Directory {
   constructor() {
-    this.root = new Folder("root", 0);
+    this.root = new Folder("root", generateUniqueID().toString(), null);
     this.json;
   }
 
-  dfs(root, rootId) {
-    if (!root) {
-      return;
-    }
+  findRoot(root, rootId) {
+    let result = [];
+    function dfs(root, rootId) {
+      if (!root) {
+        return;
+      }
 
-    if (root.id === rootId) {
-      return root;
-    }
+      if (root.id === rootId) {
+        console.log("root found....", root);
+        result.push(root);
+        return root;
+      }
 
-    for (let i = 0; i < root.subfolder.length; i++) {
-      if (this.dfs(root.subfolder[i], rootId)) {
-        return root.subfolder[i];
+      for (let i = 0; i < root.subfolder.length; i++) {
+        if (dfs(root.subfolder[i], rootId)) {
+          return root.subfolder[i];
+        }
       }
     }
+
+    dfs(root, rootId);
+    return result[0];
   }
 
   buildTree() {
@@ -73,8 +86,13 @@ class Directory {
   }
 
   addFolder(name, id, rootId) {
-    let newFolder = new Folder(name, id);
-    let parent = this.dfs(this.root, rootId);
+    console.log("Search for: ", rootId);
+    let newFolder = new Folder(name, id, rootId);
+    let parent = this.findRoot(this.root, rootId);
+    console.log("Parent is: ", parent.id, parent.name);
+    if (rootId === parent.id) {
+      console.log("MATCHED.....");
+    }
     if (parent) {
       parent.addSubFolder(newFolder);
     } else {
@@ -82,11 +100,22 @@ class Directory {
     }
   }
 
-  removeFolder(folderId, rootId) {
-    let parent = this.dfs(this.root, rootId);
+  removeFolder(folderId) {
+    let node = this.findRoot(this.root, folderId);
+    let root = this.findRoot(this.root, node.root);
+    console.log("Removing node: ", node);
+    if (root) {
+      root.removeSubFolder(folderId);
+    } else {
+      console.log("No parent found!");
+    }
+  }
 
-    if (parent) {
-      parent.removeSubFolder(folderId);
+  editFolder(data, parentId) {
+    let root = this.findRoot(this.root, parentId);
+    console.log("Editing node: ", root.name, data);
+    if (root) {
+      root.name = data;
     } else {
       console.log("No parent found!");
     }
@@ -137,7 +166,7 @@ class View {
   }
 
   getFolders(item, level) {
-    return `<div data-id=${item.id} class="${
+    return `<div data-id=${item.id} data-level=${level} class="${
       item.subfolder.length > 0 && level > 0 ? "sub-folder " : ""
     } dropdown menu-list">
               <div class="menu-list-content">
@@ -152,6 +181,7 @@ class View {
               }
               ${this.getFolderImage()}
               <span>${item.name}</span>
+              <span>${item.id}</span>
               <ul id="myDropdown" class="dropdown-content">
               ${item.data.length == 0 ? "" : this.getURLs(item.data)}
               </ul>
@@ -162,7 +192,7 @@ class View {
                   : item.subfolder
                       .map((item, idx) => {
                         console.log(idx);
-                        return `${this.getFolders(item, level + 1)}`;
+                        return `${this.getFolders(item, idx + 1)}`;
                       })
                       .join("")
               }
@@ -175,7 +205,7 @@ class View {
         id="myInput"
         placeholder="Enter folder title..."
         type="text",
-        onkeyup="dom.addNewFolder(event)"
+        onkeyup="dom.addNewFolder(event, this)"
       />`;
   }
 
@@ -200,12 +230,14 @@ class View {
                   placeholder="Enter sub-folder title..."
                   type="text",
                   />
+                  <span id="delete-button">REMOVE</span>
+                  <span id="save-button">SAVE</span>
               </div>
           </div>`;
   }
 
   renderDirectory(root) {
-    const html = root.subfolder
+    const folderPannel = root.subfolder
       .map((item, idx) => {
         return `${this.getFolders(item, 0)}`;
       })
@@ -215,8 +247,8 @@ class View {
     const dataBox = this.getDataBox();
     const modalBox = this.getModal();
 
-    let folderPannel = document.getElementById("folder-list");
-    folderPannel.innerHTML = modalBox + html + inputBox + dataBox;
+    let folderList = document.getElementById("folder-list");
+    folderList.innerHTML = modalBox + folderPannel + inputBox + dataBox;
   }
 }
 
@@ -224,15 +256,6 @@ class DOM {
   constructor(directory, view) {
     this.directory = directory;
     this.view = view;
-  }
-
-  print() {}
-
-  getCurrentItem(x) {
-    console.log("Current Item");
-    console.log(x.parentNode.parentNode);
-    console.log(x.parentNode.parentNode.getAttribute("data-id"));
-    return x.parentNode.parentNode.getAttribute("data-id");
   }
 
   addNewData(e) {
@@ -252,62 +275,39 @@ class DOM {
     }
   }
 
-  addNewFolder(e) {
-    let myInput = document.getElementById("myInput");
-
+  addNewFolder(e, x) {
     if (e.which === 13 || e.key == "Enter" || e.code == "Enter") {
       // e.preventDefault();
-      if (myInput.value === "") {
+      if (x.value === "") {
         alert("You must input Folder name!");
         return;
       } else {
-        this.directory.addFolder(myInput.value, 1, 0);
+        let parentId = this.directory.root.id;
+        dom.directory.addFolder(x.value, generateUniqueID(), parentId);
         // Clear the input box
-        myInput.value = "";
-        this.view.renderDirectory(this.directory.root);
-        this.directory.saveTree();
+        x.value = "";
+        dom.view.renderDirectory(dom.directory.root);
+        dom.directory.saveTree();
       }
-    } else {
-      console.log(this);
     }
   }
 
-  addNewFolder1(e, parentId) {
-    /* let myInput = document.getElementById("myInput1") */
-    if (e.which === 13 || e.key == "Enter" || e.code == "Enter") {
-      // e.preventDefault();
-      if (this.value === "") {
-        alert("You must input Folder name!");
-        return;
-      } else {
-        console.log("Current Item", this);
-        /* let parentId = this.getCurrentItem(x) */
-        this.directory.addFolder(this.value, 1, parentId);
-        // Clear the input box
-        myInput.value = "";
-        this.view.renderDirectory(this.directory.root);
-        this.directory.saveTree();
-      }
-    } else {
-      console.log(this);
-    }
-  }
   getCurrentItem(x) {
     /* console.log("Current Item");
       console.log(x.parentNode.parentNode);
       console.log(x.parentNode.parentNode.getAttribute("data-id")); */
-    let parentId = x.parentNode.parentNode.getAttribute("data-id");
-    let parentText = x.parentNode.parentNode.getElementsByTagName("SPAN")[0]
-      .innerText;
-    console.log(parentText);
+    let parent = x.parentNode.parentNode;
+    console.log("This is parent", parent);
+    console.log("I am ", x);
+    let parentId = parent.getAttribute("data-id");
+    let parentText = parent.getElementsByTagName("SPAN")[0].innerText;
+    // console.log("Test", parentText, parentId);
     this.showPopup(parentId, parentText);
   }
 
   showPopup(parentId, parentText) {
-    // Get the modal
-    var modal = document.getElementById("myModal");
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+    var modal = document.getElementById("myModal"); // Get the modal
+    var span = document.getElementsByClassName("close")[0]; // Get the <span> element that closes the modal
     modal.style.display = "block";
     // When the user clicks on <span> (x), close the modal
     span.onclick = function () {
@@ -320,9 +320,38 @@ class DOM {
       }
     };
 
+    let dom = this;
+
+    let deleteButton = document.getElementById("delete-button");
+    deleteButton.addEventListener("click", () => {
+      console.log("I a mclicked");
+      console.log("Detail", parentId);
+      dom.directory.removeFolder(parentId);
+
+      dom.view.renderDirectory(dom.directory.root);
+      dom.directory.saveTree();
+    });
+
+    let saveButton = document.getElementById("save-button");
+    saveButton.addEventListener("click", function () {
+      console.log("VALLLL", this.parentNode.parentNode);
+      console.log(
+        "VALLLLGGGGG",
+        this.parentNode.parentNode.getElementsByTagName("INPUT")[0].value
+      );
+
+      let inputData = this.parentNode.parentNode.getElementsByTagName(
+        "INPUT"
+      )[0].value;
+      dom.directory.editFolder(inputData, parentId);
+      // Clear the input box
+      this.value = "";
+      dom.view.renderDirectory(dom.directory.root);
+      dom.directory.saveTree();
+    });
+
     let inputBox = document.getElementById("myInput1");
     inputBox.placeholder = parentText;
-    let dom = this;
 
     inputBox.addEventListener("keyup", function (e) {
       if (e.which === 13 || e.key == "Enter" || e.code == "Enter") {
@@ -331,7 +360,11 @@ class DOM {
           alert("You must input Folder name!");
           return;
         } else {
-          dom.directory.addFolder(this.value, 5, parseInt(parentId));
+          dom.directory.addFolder(
+            this.value,
+            generateUniqueID().toString(),
+            parentId
+          );
           // Clear the input box
           this.value = "";
           dom.view.renderDirectory(dom.directory.root);
