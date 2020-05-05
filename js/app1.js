@@ -167,8 +167,9 @@ class View {
 
   getFolders(item, level) {
     return `<div data-id=${item.id} data-level=${level} class="${
-      item.subfolder.length > 0 && level > 0 ? "sub-folder " : ""
-    } dropdown menu-list">
+      level > 0 ? "sub-folder dropdown-content" : ""
+    } ${item.subfolder.length > 0 ? "dropdown" : ""} 
+    menu-list" style="--distance: ${level * 50}px">
               <div class="menu-list-content">
                 <a onclick="dom.getCurrentItem(this)" href="#">Edit</a>
                 <a onclick="dom.getCurrentItem(this)" href="#">Share</a>
@@ -192,7 +193,7 @@ class View {
                   : item.subfolder
                       .map((item, idx) => {
                         console.log(idx);
-                        return `${this.getFolders(item, idx + 1)}`;
+                        return `${this.getFolders(item, level + 1)}`;
                       })
                       .join("")
               }
@@ -375,8 +376,21 @@ class DOM {
   }
 
   expandSubFolder(x) {
-    console.log(x.parentNode.getElementsByTagName("ul"));
+    console.log("Start  ", x.parentNode.getAttribute("data-level"));
     x.classList.toggle("fa-thumbs-down");
+    let currentNode = x.parentNode;
+    let min = parseInt(currentNode.getAttribute("data-level"));
+    let nextSibling = currentNode.nextElementSibling;
+    while (
+      nextSibling &&
+      parseInt(nextSibling.getAttribute("data-level")) <= min + 1
+    ) {
+      console.log(nextSibling);
+      // getElementsByTagName("INPUT")[0]
+      nextSibling.classList.toggle("show");
+      nextSibling = nextSibling.nextElementSibling;
+    }
+
     x.parentNode.getElementsByTagName("ul")[0].classList.toggle("show");
     // document.getElementById("myDropdown").classList.toggle("show");
   }
