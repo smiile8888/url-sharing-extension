@@ -2,33 +2,23 @@
 <html>
   <head>
     <title>Page Title</title>
-  </head>
-  <body>
-    <h1>This is a Heading</h1>
-    <p>This is a paragraph.</p>
-
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
 
     <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
+  </head>
+  <body>
+    <h1>This is a Heading</h1>
+    <p>This is a paragraph.</p>
 
-    <script>
-      // Your web app's Firebase configuration
-      var firebaseConfig = {
-        apiKey: "AIzaSyAiICWukNVR_U5m-rtB1YUk62urukuG_sE",
-        authDomain: "url-sharing-3cecf.firebaseapp.com",
-        databaseURL: "https://url-sharing-3cecf.firebaseio.com",
-        projectId: "url-sharing-3cecf",
-        storageBucket: "url-sharing-3cecf.appspot.com",
-        messagingSenderId: "85139787014",
-        appId: "1:85139787014:web:4cee05a2400cfcc569a287",
-        measurementId: "G-E6PM4E3X38",
-      };
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      firebase.analytics();
-    </script>
+    <h1 id="hotDogOutput">Hot dog status</h1>
+    <input type="textfield" id="latestHotDogStatus" />
+    <button id="saveButton">Save</button>
+    <button id="loadButton">Load</button>
+
+    <script src="app.js"></script>
   </body>
 </html>
