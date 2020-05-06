@@ -376,22 +376,65 @@ class DOM {
   }
 
   expandSubFolder(x) {
-    console.log("Start  ", x.parentNode.getAttribute("data-level"));
+    console.log("Start  ", x.classList);
+
+    function keepState(nextSibling, limit) {
+      if (parseInt(nextSibling.getAttribute("data-level")) == limit) {
+        return nextSibling;
+      }
+      let iconShow = nextSibling.getElementsByTagName("I")[0];
+      console.log("Icon show ", iconShow);
+      if (iconShow) {
+        let len = iconShow.classList.length;
+        let lastAction = iconShow.classList[len - 1];
+        let show = true ? lastAction === "fa-thumbs-down" : false;
+        if (show) {
+          console.log("Current ", nextSibling);
+          console.log("Next ", nextSibling.nextElementSibling);
+          nextSibling.nextElementSibling.classList.add("show");
+        } else {
+        }
+      }
+      keepState(nextSibling.nextElementSibling, level + 1);
+    }
+
     x.classList.toggle("fa-thumbs-down");
+
     let currentNode = x.parentNode;
     let min = parseInt(currentNode.getAttribute("data-level"));
     let nextSibling = currentNode.nextElementSibling;
-    while (
-      nextSibling &&
-      parseInt(nextSibling.getAttribute("data-level")) <= min + 1
-    ) {
+    let len = x.classList.length;
+    let lastAction = x.classList[len - 1];
+
+    let show = true ? lastAction === "fa-thumbs-down" : false;
+    console.log(show);
+    while (nextSibling) {
       console.log(nextSibling);
       // getElementsByTagName("INPUT")[0]
-      nextSibling.classList.toggle("show");
+      if (show && parseInt(nextSibling.getAttribute("data-level")) == min + 1) {
+        nextSibling.classList.add("show");
+        let next = keepState(nextSibling, min + 1);
+        nextSibling = next.nextElementSibling;
+        continue;
+      }
+
+      if (
+        !show &&
+        parseInt(nextSibling.getAttribute("data-level")) >= min + 1
+      ) {
+        // Hide folder
+        nextSibling.classList.remove("show");
+      }
+
+      if (parseInt(nextSibling.getAttribute("data-level")) == min) {
+        break;
+      }
+
+      // nextSibling.classList.toggle("show");
       nextSibling = nextSibling.nextElementSibling;
     }
 
-    x.parentNode.getElementsByTagName("ul")[0].classList.toggle("show");
+    // x.parentNode.getElementsByTagName("ul")[0].classList.toggle("show");
     // document.getElementById("myDropdown").classList.toggle("show");
   }
 
