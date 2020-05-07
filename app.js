@@ -174,7 +174,6 @@ firebase.auth().onAuthStateChanged((user) => {
     btnLogOut.classList.add("hide");
   }
 });
-
 // https://www.youtube.com/watch?v=-OKrloDzGpU
 
 // Firebase Storage
@@ -206,4 +205,26 @@ fileButton.addEventListener("change", (e) => {
 
     function complete() {}
   );
+});
+
+// Firebase messaging
+const msg = firebase.messaging();
+msg.usePublicVapidKey(
+  "BGybdGcJOOK3TL1q7RLOQBiFHyui1_tA2az82H0-lyYW6RA9SBnn4gPDvFl7kkoT6CbnEWnQA2b5O-mgYiOiGxM"
+);
+msg
+  .requestPermission()
+  .then(() => {
+    console.log("Have permission");
+    return msg.getToken();
+  })
+  .then((token) => {
+    console.log(token);
+  })
+  .catch((err) => {
+    console.log("Error occured" + err);
+  });
+
+msg.onMessage((payload) => {
+  console.log("onMessage: ", payload);
 });
