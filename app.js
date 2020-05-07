@@ -105,3 +105,72 @@ getRealtimeUpdates();
 //       console.log(`${doc.id} => ${doc.data()}`);
 //     });
 //   });
+
+const txtEmail = document.querySelector("#txtEmail");
+const txtPassword = document.querySelector("#txtPassword");
+const btnLogIn = document.querySelector("#btnLogIn");
+const btnSignUp = document.querySelector("#btnSignUp");
+const btnLogOut = document.querySelector("#btnLogOut");
+
+// Password Authentication
+
+// Add log In event
+btnLogIn.addEventListener("click", (e) => {
+  // Get email and password
+  const email = txtEmail.value;
+  const pass = txtPassword.value;
+  const auth = firebase.auth();
+  // Sign In
+  const promise = auth.signInWithEmailAndPassword(email, pass);
+  promise.catch((e) => {
+    console.log("Got an sign in error: " + e.code + "---" + e.message);
+  });
+});
+
+// Add sign up event
+btnSignUp.addEventListener("click", (e) => {
+  // Get email and password
+  // TODO: CHECK FOR REAL EMAIL
+  const email = txtEmail.value;
+  const pass = txtPassword.value;
+  const auth = firebase.auth();
+  // Sign Up
+  const promise = auth.createUserWithEmailAndPassword(email, pass);
+  promise.catch((e) => {
+    console.log(e.code, e.message);
+  });
+});
+
+btnLogOut.addEventListener("click", (e) => {
+  firebase.auth().signOut();
+});
+
+const status = document.querySelector("#status");
+// Add a realtime listener
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    console.log("User Account Created/Logged In: ", user);
+    let name, email, photoUrl, uid, emailVerified;
+    name = user.displayName;
+    email = user.email;
+    photoUrl = user.photoURL;
+    emailVerified = user.emailVerified;
+    uid = user.uid;
+    status.innerHTML =
+      "Welcome: " +
+      name +
+      " " +
+      email +
+      " " +
+      photoUrl +
+      " " +
+      emailVerified +
+      " " +
+      uid;
+  } else {
+    console.log("Not logged In");
+    status.innerHTML = "Good Bye";
+  }
+});
+
+// https://www.youtube.com/watch?v=-OKrloDzGpU

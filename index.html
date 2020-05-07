@@ -9,6 +9,7 @@
      https://firebase.google.com/docs/web/setup#available-libraries -->
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
   </head>
   <body>
     <h1>This is a Heading</h1>
@@ -18,6 +19,17 @@
     <input type="textfield" id="latestHotDogStatus" />
     <button id="saveButton">Save</button>
     <button id="loadButton">Load</button>
+
+    <div class="container">
+      <input id="txtEmail" type="email" placeholder="Email" />
+      <input id="txtPassword" type="password" placeholder="Password" />
+
+      <button id="btnLogIn" class="btn btn-action">Log in</button>
+      <button id="btnSignUp" class="btn btn-secondary">Sign Up</button>
+      <button id="btnLogOut" class="btn btn-action hide">Log Out</button>
+    </div>
+
+    <div id="status"></div>
 
     <script src="app.js"></script>
   </body>
