@@ -1,0 +1,17 @@
+.btn {
+  background-color: #2196f3;
+  border: 0px;
+  color: #fff;
+  width: 70px;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn-logout {
+  background-color: red;
+}
+
+.hide {
+  display: none;
+}

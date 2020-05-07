@@ -167,9 +167,11 @@ firebase.auth().onAuthStateChanged((user) => {
       emailVerified +
       " " +
       uid;
+    btnLogOut.classList.remove("hide");
   } else {
     console.log("Not logged In");
     status.innerHTML = "Good Bye";
+    btnLogOut.classList.add("hide");
   }
 });
 
