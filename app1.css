@@ -1,0 +1,15 @@
+.tree span:hover {
+  font-weight: bold;
+}
+
+.tree span {
+  cursor: pointer;
+}
+
+.tree {
+  display: inline-grid;
+}
+
+.show {
+  display: block;
+}
