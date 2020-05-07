@@ -12,6 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-storage.js"></script>
   </head>
   <body>
     <h1>This is a Heading</h1>
@@ -21,6 +22,8 @@
     <input type="textfield" id="latestHotDogStatus" />
     <button id="saveButton">Save</button>
     <button id="loadButton">Load</button>
+    <br />
+    <br />
 
     <div class="container">
       <input id="txtEmail" type="email" placeholder="Email" />
@@ -32,8 +35,17 @@
         Log Out
       </button>
     </div>
-
     <div id="status"></div>
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <div class="upload">
+      <progress value="0" max="100" id="uploader">0%</progress>
+      <input type="file" value="upload" id="fileButton" />
+    </div>
 
     <script src="app.js"></script>
   </body>

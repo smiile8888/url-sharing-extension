@@ -176,3 +176,34 @@ firebase.auth().onAuthStateChanged((user) => {
 });
 
 // https://www.youtube.com/watch?v=-OKrloDzGpU
+
+// Firebase Storage
+// Images, videos, music, and binary data galore
+let uploader = document.querySelector("#uploader");
+let fileButton = document.querySelector("#fileButton");
+
+// Listen for file selection
+fileButton.addEventListener("change", (e) => {
+  // Get file
+  let file = e.target.files[0];
+
+  // Create a storage ref
+  // firebase.storage().ref("folder_name/file_name");
+  let storageRef = firebase.storage().ref("sweet_gifs/" + file.name);
+
+  // Upload file
+  let task = storageRef.put(file);
+
+  // Update progress bar
+  task.on(
+    "state_changed",
+    function progrss(snapshot) {
+      let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      uploader.value = percentage;
+    },
+
+    function error(error) {},
+
+    function complete() {}
+  );
+});

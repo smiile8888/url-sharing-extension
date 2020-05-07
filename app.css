@@ -15,3 +15,22 @@
 .hide {
   display: none;
 }
+
+/* Get anything center */
+.upload {
+  display: flex;
+  min-height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#uploader {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 50%;
+  margin-bottom: 10px;
+}
