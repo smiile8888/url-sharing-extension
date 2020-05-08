@@ -2,8 +2,12 @@
 <html>
   <head>
     <title>Page Title</title>
-    <link rel="stylesheet" href="app.css" />
-
+    <!-- Add icon library -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="app1.css" />
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
 
@@ -11,43 +15,25 @@
      https://firebase.google.com/docs/web/setup#available-libraries -->
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-messaging.js"></script>
   </head>
   <body>
-    <h1>This is a Heading</h1>
-    <p>This is a paragraph.</p>
+    <h1 id="hotDogOutput">Main Folder</h1>
 
-    <h1 id="hotDogOutput">Hot dog status</h1>
-    <input type="textfield" id="latestHotDogStatus" />
-    <button id="saveButton">Save</button>
-    <button id="loadButton">Load</button>
-    <br />
-    <br />
+    <div id="container"></div>
 
-    <div class="container">
-      <input id="txtEmail" type="email" placeholder="Email" />
-      <input id="txtPassword" type="password" placeholder="Password" />
+    <input
+      class=""
+      id="myInput"
+      placeholder="Enter folder title..."
+      type="text"
+    />
 
-      <button id="btnLogIn" class="btn btn-action">Log in</button>
-      <button id="btnSignUp" class="btn btn-secondary">Sign Up</button>
-      <button id="btnLogOut" class="btn btn-action btn-logout hide">
-        Log Out
-      </button>
-    </div>
-    <div id="status"></div>
-
-    <br />
-    <br />
-    <br />
-    <br />
-
-    <div class="upload">
-      <progress value="0" max="100" id="uploader">0%</progress>
-      <input type="file" value="upload" id="fileButton" />
+    <div id="folder-content">
+      <span id="folder-name">Folder Name</span>
+      <div id="sub-folder">Sub folder</div>
+      <div id="sub-folder-url">URLs</div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app1.js"></script>
   </body>
 </html>
