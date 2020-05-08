@@ -1,0 +1,36 @@
+.btn {
+  background-color: #2196f3;
+  border: 0px;
+  color: #fff;
+  width: 70px;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn-logout {
+  background-color: red;
+}
+
+.hide {
+  display: none;
+}
+
+/* Get anything center */
+.upload {
+  display: flex;
+  min-height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#uploader {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 50%;
+  margin-bottom: 10px;
+}

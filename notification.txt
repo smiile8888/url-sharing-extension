@@ -1,0 +1,11 @@
+{
+    "to": "",
+    "notification": {
+        "title": "Hello",
+        "body": "World",
+        "icon": "ggg.png"
+    },
+    "data": {
+        "status": "Woohoo it works",
+    }
+}

@@ -1,0 +1,47 @@
+.tree span:hover {
+  font-weight: bold;
+}
+
+.tree span {
+  cursor: pointer;
+}
+
+.tree {
+  display: inline-grid;
+}
+
+.show {
+  display: block !important;
+}
+
+.tree i {
+  cursor: pointer;
+}
+
+.show {
+  display: block;
+}
+
+.menu-list {
+  position: relative;
+}
+
+.menu-list:hover .menu-list-content {
+  display: block;
+}
+
+.menu-list-content {
+  display: none;
+  position: absolute;
+  background-color: #000000;
+  min-width: 120px;
+  z-index: 1;
+  opacity: 0.5;
+  text-align: right;
+  color: white;
+  height: 30px;
+  border: 1px dashed red;
+  margin-left: 120px;
+  left: -105px;
+  top: -8px;
+}
