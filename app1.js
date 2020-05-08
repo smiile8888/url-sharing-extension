@@ -1,20 +1,3 @@
-// let data = {
-//   Fish: {
-//     trout: {},
-//     salmon: {},
-//   },
-//   Tree: {
-//     Huge: {
-//       sequoia: {},
-//       oak: {},
-//     },
-//     Flowering: {
-//       "apple tree": {},
-//       magnolia: {},
-//     },
-//   },
-// };
-
 let data1 = {
   folder: [
     {
@@ -88,9 +71,9 @@ function getFolderInfo(item) {
 function getMenuList() {
   return `
             <div class="menu-list-content">
-                <a href="#">Edit</a>
+                <a id="edit" href="#">Edit</a>
                 <a  href="#">Share</a>
-                <a href="#">+</a>
+                <a id="add" href="#">+</a>
             </div>`;
 }
 
@@ -207,6 +190,42 @@ function addEventToTree() {
     // parentNode.classList.toggle("fa-thumbs-down");
   });
 
+  tree.addEventListener("click", (e) => {
+    if (
+      e.target.getAttribute("id") == "add" ||
+      e.target.getAttribute("id") == "edit"
+    ) {
+      console.log("5555: ", e.target.parentNode.parentNode);
+      console.log("5555: ", e.target.parentNode.parentNode.innerText);
+
+      let parentNode = e.target.parentNode.parentNode;
+      // Need to fix getting the folder name
+      let folderName = parentNode.innerText;
+      let parentId = parentNode.getAttribute("data-id");
+
+      // Get the node detail
+      let folder = getFolder(parentId);
+      if (!folder) return;
+
+      let modal = document.getElementById("myModal"); // Get the modal
+      let span = document.getElementsByClassName("close")[0]; // Get the <span> element that closes the modal
+      modal.style.display = "block";
+      modal.setAttribute("data-id", parentId);
+      modal.setAttribute("data-name", folderName);
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function () {
+        modal.style.display = "none";
+      };
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    }
+  });
+
   // To show custome menu
   //   tree.addEventListener("mouseover", (e) => {
   //     if (e.target.tagName == "IMG" || e.target.tagName == "SPAN") {
@@ -318,7 +337,7 @@ getRealtimeUpdates = function () {
       const myData = doc.data();
       data1.folder = myData.data;
       outputHeader.innerHTML =
-        "Hot dog status: " +
+        "Folder Name: " +
         myData.data.map((item) => {
           return item.title;
         });
@@ -342,5 +361,42 @@ function saveData() {
       console.log("Got an error: ", error);
     });
 }
+
+let removeBtn = document.querySelector("#delete-btn");
+let saveBtn = document.querySelector("#save-btn");
+let inputBoxModal = document.querySelector("#inputBox");
+
+inputBoxModal.addEventListener("keyup", (e) => {
+  if (e.which === 13 || e.key == "Enter" || e.code == "Enter") {
+    if (e.target.value === "") {
+      alert("Please typeeeeee");
+    } else {
+      console.log("HHHH: ", e.target.parentNode.parentNode);
+      let clickedFolderId = e.target.parentNode.parentNode.getAttribute(
+        "data-id"
+      );
+
+      let folder = getFolder(clickedFolderId);
+      if (!folder) return;
+
+      let data = {
+        title: e.target.value,
+        id: Math.floor(Math.random() * 100001),
+        subfolder: [],
+        url: [],
+      };
+      folder.subfolder.push(data);
+      e.target.value = "";
+
+      // insert to DOM tree
+      createTree(data1.folder);
+      addIconToggle();
+      addEventToTree();
+      saveData();
+      let modal = document.getElementById("myModal");
+      modal.style.display = "none";
+    }
+  }
+});
 
 getRealtimeUpdates();
