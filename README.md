@@ -5,8 +5,6 @@ URL Sharing extension will change your sharing experience while using desktop-ba
 
 Moreover, you can save to the folder and share to the people in your circle too!
 
---
-
 ## Contributors
 The dedicated Google Drive has been shared to you if you are the contributor of this project.
 Please feel free to dump related information into that drive.
